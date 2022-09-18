@@ -39,7 +39,7 @@ void setFileNameOfDepends(char *nscr_fname, char *ncgr_fname, char *nclr_fname) 
 	char basename[_MAX_PATH];
 	char basename_ncgr[_MAX_PATH];
 	char basename_nclr[_MAX_PATH];
-	int len;
+	size_t len;
 
 	// remove directory path
 	slash = getPathSlash(nscr_fname);

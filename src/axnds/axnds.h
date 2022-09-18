@@ -23,8 +23,8 @@ static const char *pluginfo[] = {
 #define HEADBUF_SIZE    512
 
 BOOL APIENTRY SpiEntryPoint(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
-BOOL IsSupportedEx(char *filename, char *data);
-int GetArchiveInfoEx(LPSTR filename, long len, HLOCAL *lphInf);
-int GetFileEx(char *filename, HLOCAL *dest, fileInfo *pinfo, SPI_PROGRESS lpPrgressCallback, long lData);
+BOOL IsSupportedEx(const char *filename, char *data);
+int GetArchiveInfoEx(LPSTR filename, LONG_PTR len, HLOCAL *lphInf);
+int GetFileEx(char *filename, HLOCAL *dest, fileInfo *pinfo, SPI_PROGRESS lpPrgressCallback, LONG_PTR lData);
 
 #endif

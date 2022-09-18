@@ -50,7 +50,7 @@ BOOL APIENTRY SpiEntryPoint(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpR
 }
 
 /** check if the plug-in can handle the file */
-BOOL IsSupportedEx(char *filename, char *data)
+BOOL IsSupportedEx(const char *filename, char *data)
 {
 	bool res = false;
 	FILE *fp = fopen(filename, "rb");
@@ -79,7 +79,7 @@ exitterm:
 
 #ifndef NO_FILE_MAPPING
 
-inline int GetArchiveInfoExWithFileMapping(LPSTR filename, long len, HLOCAL *lphInf)
+inline int GetArchiveInfoExWithFileMapping(LPSTR filename, LONG_PTR len, HLOCAL *lphInf)
 {
 	int res;
 	int fileCount;
@@ -176,7 +176,7 @@ exitterm:
 #endif
 
 /** get the info of all files in the archive, then store them into lphInf. */
-int GetArchiveInfoEx(LPSTR filename, long len, HLOCAL *lphInf)
+int GetArchiveInfoEx(LPSTR filename, LONG_PTR len, HLOCAL *lphInf)
 {
 #ifndef NO_FILE_MAPPING
 	return GetArchiveInfoExWithFileMapping(filename, len, lphInf);
@@ -188,7 +188,7 @@ int GetArchiveInfoEx(LPSTR filename, long len, HLOCAL *lphInf)
 #ifndef NO_FILE_MAPPING
 
 inline int GetFileExWithFileMapping(char *filename, HLOCAL *dest, fileInfo *pinfo,
-		SPI_PROGRESS lpPrgressCallback, long lData)
+	SPI_PROGRESS lpPrgressCallback, LONG_PTR lData)
 {
 	int res;
 	HANDLE fNDS = NULL;
@@ -280,7 +280,7 @@ exitterm:
 
 /** read the file which is pointed by fileInfo, from "filename". */
 int GetFileEx(char *filename, HLOCAL *dest, fileInfo *pinfo,
-		SPI_PROGRESS lpPrgressCallback, long lData)
+	SPI_PROGRESS lpPrgressCallback, LONG_PTR lData)
 {
 #ifndef NO_FILE_MAPPING
 	return GetFileExWithFileMapping(filename, dest, pinfo, lpPrgressCallback, lData);

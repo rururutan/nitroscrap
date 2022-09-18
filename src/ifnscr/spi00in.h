@@ -21,6 +21,9 @@ typedef struct PictureInfo
 	WORD x_density;
 	WORD y_density;
 	short colorDepth;
+#ifdef _WIN64
+	char  dummy[2];
+#endif
 	HLOCAL hInfo;
 } PictureInfo;
 #pragma pack(pop)
@@ -44,19 +47,19 @@ typedef struct PictureInfo
 /*-------------------------------------------------------------------------*/
 /* Prototypes */
 /*-------------------------------------------------------------------------*/
-typedef int (CALLBACK *SPI_PROGRESS)(int, int, long);
+typedef int (CALLBACK *SPI_PROGRESS)(int, int, LONG_PTR);
 	int __declspec(dllexport) __stdcall GetPluginInfo
 		(int infono, LPSTR buf, int buflen);
-	int __declspec(dllexport) __stdcall IsSupported(LPSTR filename, DWORD dw);
+	int __declspec(dllexport) __stdcall IsSupported(LPSTR filename, void* dw);
 	int __declspec(dllexport) __stdcall GetPictureInfo
-		(LPSTR buf,long len, unsigned int flag, PictureInfo *lpInfo);
+		(LPSTR buf,LONG_PTR len, unsigned int flag, PictureInfo *lpInfo);
 	int __declspec(dllexport) __stdcall GetPicture
-		(LPSTR buf,long len, unsigned int flag,
+		(LPSTR buf,LONG_PTR len, unsigned int flag,
 		 HANDLE *pHBInfo, HANDLE *pHBm,
-		 SPI_PROGRESS lpPrgressCallback, long lData);
+		 SPI_PROGRESS lpPrgressCallback, LONG_PTR lData);
 	int __declspec(dllexport) __stdcall GetPreview
-		(LPSTR buf,long len, unsigned int flag,
+		(LPSTR buf,LONG_PTR len, unsigned int flag,
 		 HANDLE *pHBInfo, HANDLE *pHBm,
-		 SPI_PROGRESS lpPrgressCallback, long lData);
+		 SPI_PROGRESS lpPrgressCallback, LONG_PTR lData);
 
 #endif

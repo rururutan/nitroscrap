@@ -16,13 +16,16 @@
 typedef struct fileInfo
 {
   unsigned char method[8];
-  unsigned long position;
-  unsigned long compsize;
-  unsigned long filesize;
-  long /*time_t*/ timestamp;
+  ULONG_PTR position;
+  ULONG_PTR compsize;
+  ULONG_PTR filesize;
+  ULONG_PTR /*time_t*/ timestamp;
   char path[200];
   char filename[200];
   unsigned long crc;
+#ifdef _WIN64
+   char dummy[4];
+#endif
 } fileInfo;
 #pragma pack(pop)
 
@@ -46,23 +49,23 @@ typedef struct fileInfo
 // Prototypes
 /*-------------------------------------------------------------------------*/
 //int PASCAL ProgressCallback(int nNum, int nDenom, long lData);
-typedef int (CALLBACK *SPI_PROGRESS)(int, int, long);
+typedef int (CALLBACK *SPI_PROGRESS)(int, int, LONG_PTR);
 extern "C"
 {
   int __declspec(dllexport) __stdcall GetPluginInfo
       (int infono, LPSTR buf, int buflen);
-  int __declspec(dllexport) __stdcall IsSupported(LPSTR filename, DWORD dw);
+  int __declspec(dllexport) __stdcall IsSupported(LPCSTR filename, DWORD dw);
   int __declspec(dllexport) __stdcall GetArchiveInfo(
-      LPSTR buf, long len, unsigned int flag, HLOCAL *lphInf);
-  int __declspec(dllexport) __stdcall GetFileInfo(LPSTR buf,long len,
+      LPSTR buf, LONG_PTR len, unsigned int flag, HLOCAL *lphInf);
+  int __declspec(dllexport) __stdcall GetFileInfo(LPSTR buf,LONG_PTR len,
       LPSTR filename, unsigned int flag, fileInfo *lpInfo);
-  int __declspec(dllexport) __stdcall GetFile(LPSTR src,long len,
+  int __declspec(dllexport) __stdcall GetFile(LPSTR src,LONG_PTR len,
          LPSTR dest, unsigned int flag,
-         SPI_PROGRESS prgressCallback, long lData);
+         SPI_PROGRESS prgressCallback, LONG_PTR lData);
   int __declspec(dllexport) __stdcall GetPreview
-      (LPSTR buf,long len, unsigned int flag,
+      (LPSTR buf,LONG_PTR len, unsigned int flag,
        HANDLE *pHBInfo, HANDLE *pHBm,
-       SPI_PROGRESS lpPrgressCallback, long lData);
+       SPI_PROGRESS lpPrgressCallback, LONG_PTR lData);
 }
 
 #endif

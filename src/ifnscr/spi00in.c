@@ -27,13 +27,13 @@ int __stdcall GetPluginInfo(int infono, LPSTR buf, int buflen)
 	return (int) lstrlen(buf);
 }
 /*-------------------------------------------------------------------------*/
-int __stdcall IsSupported(LPSTR filename, DWORD dw)
+int __stdcall IsSupported(LPSTR filename, void* dw)
 {
 	char *data;
 	char buff[HEADBUF_SIZE];
 	DWORD ReadBytes;
 
-	if ((dw & 0xFFFF0000) == 0) {
+	if ((DWORD_PTR)dw & ~(DWORD_PTR)0xffff) {
 		if (!ReadFile((HANDLE)dw, buff, HEADBUF_SIZE, &ReadBytes, NULL)) {
 			return 0;
 		}
@@ -48,7 +48,7 @@ int __stdcall IsSupported(LPSTR filename, DWORD dw)
 }
 /*-------------------------------------------------------------------------*/
 int __stdcall GetPictureInfo
-		(LPSTR buf, long len, unsigned int flag, struct PictureInfo *lpInfo)
+		(LPSTR buf, LONG_PTR len, unsigned int flag, struct PictureInfo *lpInfo)
 {
 	int ret = SPI_OTHER_ERROR;
 	char headbuf[HEADBUF_SIZE];
@@ -60,7 +60,7 @@ int __stdcall GetPictureInfo
 	if ((flag & 7) == 0) {
 		hf = CreateFile(buf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 		if (hf == INVALID_HANDLE_VALUE) return SPI_FILE_READ_ERROR;
-		if (SetFilePointer(hf, len, NULL, FILE_BEGIN) != (DWORD)len) {
+		if (SetFilePointer(hf, (LONG)len, NULL, FILE_BEGIN) != (DWORD)len) {
 			CloseHandle(hf);
 			return SPI_FILE_READ_ERROR;
 		}
@@ -88,9 +88,9 @@ int __stdcall GetPictureInfo
 }
 /*-------------------------------------------------------------------------*/
 int __stdcall GetPicture(
-		LPSTR buf, long len, unsigned int flag, 
+		LPSTR buf, LONG_PTR len, unsigned int flag,
 		HANDLE *pHBInfo, HANDLE *pHBm,
-		SPI_PROGRESS lpPrgressCallback, long lData)
+		SPI_PROGRESS lpPrgressCallback, LONG_PTR lData)
 {
 	int ret = SPI_OTHER_ERROR;
 	char *data;
@@ -107,7 +107,7 @@ int __stdcall GetPicture(
 			CloseHandle(hf);
 			return SPI_NOT_SUPPORT;
 		}
-		if (SetFilePointer(hf, len, NULL, FILE_BEGIN) != (DWORD)len) {
+		if (SetFilePointer(hf, (LONG)len, NULL, FILE_BEGIN) != (DWORD)len) {
 			CloseHandle(hf);
 			return SPI_FILE_READ_ERROR;
 		}
@@ -145,9 +145,9 @@ int __stdcall GetPicture(
 }
 /*-------------------------------------------------------------------------*/
 int __stdcall GetPreview(
-	LPSTR buf, long len, unsigned int flag,
+	LPSTR buf, LONG_PTR len, unsigned int flag,
 	HANDLE *pHBInfo, HANDLE *pHBm,
-	SPI_PROGRESS lpPrgressCallback, long lData)
+	SPI_PROGRESS lpPrgressCallback, LONG_PTR lData)
 {
 	return SPI_NO_FUNCTION;
 }

@@ -36,7 +36,7 @@ int __stdcall GetPluginInfo(int infono, LPSTR buf, int buflen)
   return (int) strlen(buf);
 }
 //---------------------------------------------------------------------------
-int __stdcall IsSupported(LPSTR filename, DWORD dw)
+int __stdcall IsSupported(LPCSTR filename, DWORD dw)
 {
   char *data;
   char buff[HEADBUF_SIZE];
@@ -95,10 +95,16 @@ if (phinfo != NULL) {
   memcpy(*phinfo, (void*)hinfo, size);
 } else {
   fileInfo *ptmp = (fileInfo *)hinfo;
+  char fullpath[0x400];
   if (pinfo->filename[0] != '\0') {
     for (;;) {
       if (ptmp->method[0] == '\0') return SPI_NO_FUNCTION;
-      if (_stricmp(ptmp->filename, pinfo->filename) == 0) break;
+	  if (_stricmp(ptmp->filename, pinfo->filename) == 0) break;
+	  {
+		  strcpy(fullpath, ptmp->path);
+		  strcat(fullpath, ptmp->filename);
+		  if (_stricmp(fullpath, pinfo->filename) == 0) break;
+	  }
       ptmp++;
     }
   } else {
@@ -128,6 +134,7 @@ int __stdcall GetFileInfo
 
   if ((flag & 7) != 0) return SPI_NO_FUNCTION;
 
+  lpInfo->path[0] = '\0';
   strcpy(lpInfo->filename, filename);
 
   return GetArchiveInfoCache(buf, len, NULL, lpInfo);
